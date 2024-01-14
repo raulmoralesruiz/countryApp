@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { switchMap } from 'rxjs';
 import { CountriesService } from '../../services/countries.service';
+import { Country } from '../../interfaces/country';
 
 @Component({
   selector: 'app-country-page',
@@ -9,6 +10,9 @@ import { CountriesService } from '../../services/countries.service';
   styles: ``,
 })
 export class CountryPageComponent implements OnInit {
+
+  public country?: Country;
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
@@ -21,12 +25,11 @@ export class CountryPageComponent implements OnInit {
       switchMap( ({ id }) => this.countriesService.searchCountryByAlphaCode(id) )
     )
     .subscribe( country  => {
-      if (!country) {
-        return this.router.navigateByUrl('');
-      }
+      // Si no hay país, volvemos a la ruta por defecto
+      if (!country) return this.router.navigateByUrl('');
 
-      console.log('Tenemos un país');
-      return;
+      // Tenemos un país
+      return this.country = country;
     });
   }
 
